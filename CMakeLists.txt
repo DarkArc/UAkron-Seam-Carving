@@ -1,10 +1,10 @@
 cmake_minimum_required(VERSION 2.8)
 
 # Project Declaration
-project(Percolation CXX)
+project(SeamCarving CXX)
 
 # Source Declaration
-add_executable(Percolation
+add_executable(SeamCarving
   main.cpp
 )
 
