@@ -105,5 +105,5 @@ template <typename K>
 
 template <typename K>
   bool operator < (const Optional<K>& a, const Optional<K>& b) {
-    return a.hasVal() && b.hasVal() && a.getVal() < b.getVal();
+    return !b.hasVal() || (a.hasVal() && a.getVal() < b.getVal());
   }
