@@ -35,7 +35,8 @@ template <typename K>
   bool operator == (const Optional<K>&, const Optional<K>&);
 template <typename K>
   bool operator != (const Optional<K>&, const Optional<K>&);
-
+template <typename K>
+  bool operator < (const Optional<K>&, const Optional<K>&);
 #include "Optional.ipp"
 
 #endif

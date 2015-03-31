@@ -9,7 +9,7 @@ enum class CarvingMode {
 };
 
 template <typename T>
-  FlexGrid<T> seamCarve(const FlexGrid<T>&, const unsigned int&, const unsigned int&);
+  FlexGrid<T> seamCarve(const FlexGrid<T>&, const CarvingMode&, const unsigned int&);
 
 template <typename T>
   FlexGrid<T> calcEnergy(const FlexGrid<T>&);

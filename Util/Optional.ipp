@@ -86,7 +86,7 @@ template <typename T>
     @return true if both Optionals contain the same value,
     false otherwise.
  */
-template <typename T, typename K>
+template <typename K>
   bool operator == (const Optional<K>& a, const Optional<K>& b) {
     return a.hasVal() == b.hasVal() && a.getVal() == b.getVal();
   }
@@ -98,7 +98,12 @@ template <typename T, typename K>
     @return false if both Optionals contain the same value,
     true otherwise.
  */
-template <typename T, typename K>
+template <typename K>
   bool operator != (const Optional<K>& a, const Optional<K>& b) {
     return !(a == b);
+  }
+
+template <typename K>
+  bool operator < (const Optional<K>& a, const Optional<K>& b) {
+    return a.hasVal() && b.hasVal() && a.getVal() < b.getVal();
   }

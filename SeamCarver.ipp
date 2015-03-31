@@ -1,5 +1,8 @@
 #include "SeamCarver.hpp"
 
+// TODO Remove
+#include <iostream>
+
 #include <algorithm>
 #include <stdexcept>
 #include <set>
@@ -8,10 +11,13 @@
 #include "Util/Optional.hpp"
 
 template <typename T>
-  FlexGrid<T> seamCarve(const FlexGrid<T>& grid, const unsigned int& horz, const unsigned int& vert) {
+  FlexGrid<T> seamCarve(const FlexGrid<T>& grid, const CarvingMode& mode, const unsigned int& amt) {
+    std::cout << "Calcing energy" << std::endl;
     FlexGrid<T> energyGrid = calcEnergy(grid);
-    FlexGrid<T> costGrid = calcCost(energyGrid, CarvingMode::HORIZONTAL);
-    return costGrid;
+    std::cout << "Calcing cost" << std::endl;
+    FlexGrid<T> costGrid = calcCost(energyGrid, mode);
+    std::cout << "Carving!" << std::endl;
+    return traceBackRem(grid, costGrid, mode, amt);
   }
 
 template <typename T>
@@ -22,10 +28,10 @@ template <typename T>
         T cur = grid.getValAt(w, h);
 
         // Gen diffs
-        T left   =  w > 0              ? cur - grid.getValAt(w - 1, h) : 0;
-        T right  =  w < r.getWidth()   ? cur - grid.getValAt(w + 1, h) : 0;
-        T top    =  h > 0              ? cur - grid.getValAt(w, h - 1) : 0;
-        T bottom =  h < r.getHeight()  ? cur - grid.getValAt(w, h + 1) : 0;
+        T left   =  w > 0                 ? cur - grid.getValAt(w - 1, h) : 0;
+        T right  =  w < r.getWidth() - 1  ? cur - grid.getValAt(w + 1, h) : 0;
+        T top    =  h > 0                 ? cur - grid.getValAt(w, h - 1) : 0;
+        T bottom =  h < r.getHeight() - 1 ? cur - grid.getValAt(w, h + 1) : 0;
 
         // Make diffs abs
         left   = std::abs(left);
@@ -64,13 +70,11 @@ template <typename T>
         if (h > 0) {
           above.setVal(r.getValAt(wPos, h - 1));
         }
-        if (h < r.getHeight()) {
+        if (h < r.getHeight() - 1) {
           below.setVal(r.getValAt(wPos, h + 1));
         }
 
-        T minVal = std::min({above, center, below}, [] (auto a, auto b) {
-            return a.hasVal() && b.hasVal() && a.getVal() < b.getVal();
-        }).getVal();
+        T minVal = std::min({above, center, below}).getVal();
 
         r.setValAt(w, h, curVal + minVal);
       }
@@ -103,13 +107,11 @@ template <typename T>
         if (w > 0) {
           left.setVal(r.getValAt(w - 1, hPos));
         }
-        if (w < r.getWidth()) {
+        if (w < r.getWidth() - 1) {
           right.setVal(r.getValAt(w + 1, hPos));
         }
 
-        T minVal = std::min({left, center, right}, [] (auto a, auto b) {
-            return a.hasVal() && b.hasVal() && a.getVal() < b.getVal();
-        }).getVal();
+        T minVal = std::min({left, center, right}).getVal();
 
         r.setValAt(w, h, curVal + minVal);
       }
@@ -135,7 +137,7 @@ template <typename T>
     for (unsigned int h = 0; h < cost.getHeight(); ++h) {
       startingPts[cost.getValAt(cost.getWidth() - 1, h)] = h;
     }
-    startingPts.erase(startingPts.begin() + amt, startingPts.end());
+    startingPts.erase(std::next(startingPts.begin(), amt), startingPts.end());
 
     std::set<unsigned int> indexes;
     std::set<unsigned int> nextIndexes;
@@ -154,7 +156,6 @@ template <typename T>
             auto wPos = w - 1;
 
             // Constant Params
-            T curVal = cost.getValAt(w, h);
             Optional<T> center(cost.getValAt(wPos, h));
 
             // Optional Params
@@ -168,16 +169,14 @@ template <typename T>
               below.setVal(cost.getValAt(wPos, h + 1));
             }
 
-            T minVal = std::min({above, center, below}, [] (auto a, auto b) {
-                return a.hasVal() && b.hasVal() && a.getVal() < b.getVal();
-            });
+            Optional<T> minVal = std::min({above, center, below});
 
             if (minVal == above) {
               nextIndexes.insert(h + 1);
-            } else if (minVal == curVal) {
-              nextIndexes.insert(h);
-            } else {
+            } else if (minVal == below) {
               nextIndexes.insert(h - 1);
+            } else {
+              nextIndexes.insert(h);
             }
           }
           ++offset;
@@ -204,7 +203,7 @@ template <typename T>
     for (unsigned int w = 0; w < cost.getWidth(); ++w) {
       startingPts[cost.getValAt(w, cost.getHeight() - 1)] = w;
     }
-    startingPts.erase(startingPts.begin() + amt, startingPts.end());
+    startingPts.erase(std::next(startingPts.begin(), amt), startingPts.end());
 
     std::set<unsigned int> indexes;
     std::set<unsigned int> nextIndexes;
@@ -223,7 +222,6 @@ template <typename T>
             auto hPos = h - 1;
 
             // Constant Params
-            T curVal = grid.getValAt(w, h);
             Optional<T> center(cost.getValAt(w, hPos));
 
             // Optional Params
@@ -237,16 +235,14 @@ template <typename T>
               right.setVal(cost.getValAt(w + 1, hPos));
             }
 
-            T minVal = std::min({left, center, right}, [] (auto a, auto b) {
-                return a.hasVal() && b.hasVal() && a.getVal() < b.getVal();
-            });
+            Optional<T> minVal = std::min({left, center, right});
 
             if (minVal == left) {
               nextIndexes.insert(w + 1);
-            } else if (minVal == curVal) {
-              nextIndexes.insert(w);
-            } else {
+            } else if (minVal == right) {
               nextIndexes.insert(w - 1);
+            } else {
+              nextIndexes.insert(w);
             }
           }
           ++offset;
@@ -269,7 +265,7 @@ template <typename T>
 
 
 template <typename T>
-  FlexGrid<T> traceBackRem(FlexGrid<T>& grid, FlexGrid<T>& cost, const CarvingMode& mode, const unsigned int& amt) {
+  FlexGrid<T> traceBackRem(FlexGrid<T> grid, FlexGrid<T>& cost, const CarvingMode& mode, const unsigned int& amt) {
     switch (mode) {
       case CarvingMode::HORIZONTAL:
         return traceBackRemH(grid, cost, amt);
