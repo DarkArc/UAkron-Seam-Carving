@@ -137,7 +137,10 @@ template <typename T>
     for (unsigned int h = 0; h < cost.getHeight(); ++h) {
       startingPts[cost.getValAt(cost.getWidth() - 1, h)] = h;
     }
-    startingPts.erase(std::next(startingPts.begin(), amt), startingPts.end());
+    unsigned int dist = std::distance(startingPts.begin(), startingPts.end());
+    if (dist > amt) {
+      startingPts.erase(std::next(startingPts.begin(), amt), startingPts.end());
+    }
 
     std::set<unsigned int> indexes;
     std::set<unsigned int> nextIndexes;
@@ -148,7 +151,7 @@ template <typename T>
     }
 
     // Start removing seams
-    for (unsigned int w = grid.getWidth() - 1; w >= 0; --w) {
+    for (unsigned int w = grid.getWidth() - 1; w > 0; --w) {
       unsigned int offset = 0;
       for (unsigned int h = 0; h < grid.getHeight(); ++h) {
         if (indexes.find(h) != indexes.end()) {
@@ -165,7 +168,7 @@ template <typename T>
             if (h > 0) {
               above.setVal(cost.getValAt(wPos, h - 1));
             }
-            if (h < cost.getHeight()) {
+            if (h < cost.getHeight() - 1) {
               below.setVal(cost.getValAt(wPos, h + 1));
             }
 
@@ -203,7 +206,12 @@ template <typename T>
     for (unsigned int w = 0; w < cost.getWidth(); ++w) {
       startingPts[cost.getValAt(w, cost.getHeight() - 1)] = w;
     }
-    startingPts.erase(std::next(startingPts.begin(), amt), startingPts.end());
+    unsigned int dist = std::distance(startingPts.begin(), startingPts.end());
+    if (dist > amt) {
+      startingPts.erase(std::next(startingPts.begin(), amt), startingPts.end());
+    }
+
+    std::cout << "Limited scope" << std::endl;
 
     std::set<unsigned int> indexes;
     std::set<unsigned int> nextIndexes;
@@ -211,13 +219,17 @@ template <typename T>
     // Populate the indexes with the starting points
     for (auto& entry : startingPts) {
       indexes.insert(entry.second);
+      std::cout << "Supplying: " << entry.second << std::endl;
     }
 
+    std::cout << "Populated" << std::endl;
+
     // Start removing seams
-    for (unsigned int h = grid.getHeight() - 1; h >= 0; --h) {
+    for (unsigned int h = grid.getHeight() - 1; h > 0; --h) {
       unsigned int offset = 0;
       for (unsigned int w = 0; w < grid.getWidth(); ++w) {
         if (indexes.find(w) != indexes.end()) {
+          std::cout << "Found " << w << std::endl;
           if (h > 0) {
             auto hPos = h - 1;
 
@@ -231,7 +243,7 @@ template <typename T>
             if (w > 0) {
               left.setVal(cost.getValAt(w - 1, hPos));
             }
-            if (w < cost.getWidth()) {
+            if (w < cost.getWidth() - 1) {
               right.setVal(cost.getValAt(w + 1, hPos));
             }
 
@@ -248,6 +260,8 @@ template <typename T>
           ++offset;
           continue;
         }
+
+        std::cout << "Not found cur state:" << h << " " << w << std::endl;
 
         if (offset > 0) {
           grid.setValAt(w, h - offset, grid.getValAt(w, h));
