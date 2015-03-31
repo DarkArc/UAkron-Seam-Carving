@@ -131,41 +131,41 @@ template <typename T>
 template <typename T>
   FlexGrid<T> traceBackRemH(FlexGrid<T> grid, FlexGrid<T>& cost, const unsigned int& amt) {
     // Finding starting points
-    std::map<T, unsigned int> startingPoints;
+    std::map<T, unsigned int> startingPts;
     for (unsigned int h = 0; h < cost.getHeight(); ++h) {
-      startingPoints[cost.getValAt(r.getWidth() - 1, h)] = h;
+      startingPts[cost.getValAt(cost.getWidth() - 1, h)] = h;
     }
-    mymap.erase(mymap.begin() + amt, mymap.end());
+    startingPts.erase(startingPts.begin() + amt, startingPts.end());
 
-    std::set<unsigned int> indexs;
-    std::set<unsigned int> nextIndexs;
+    std::set<unsigned int> indexes;
+    std::set<unsigned int> nextIndexes;
 
     // Populate the indexes with the starting points
-    for (auto& entry : startingPoints) {
+    for (auto& entry : startingPts) {
       indexes.insert(entry.second);
     }
 
     // Start removing seams
-    for (unsigned int w = r.getWidth() - 1; w >= 0; --w) {
+    for (unsigned int w = grid.getWidth() - 1; w >= 0; --w) {
       unsigned int offset = 0;
-      for (unsigned int h = 0; h < r.getHeight(); ++h) {
+      for (unsigned int h = 0; h < grid.getHeight(); ++h) {
         if (indexes.find(h) != indexes.end()) {
           if (w > 0) {
             auto wPos = w - 1;
 
             // Constant Params
-            T curVal = grid.getValAt(w, h);
-            Optional<T> center(r.getValAt(wPos, h));
+            T curVal = cost.getValAt(w, h);
+            Optional<T> center(cost.getValAt(wPos, h));
 
             // Optional Params
             Optional<T> above;
             Optional<T> below;
 
             if (h > 0) {
-              above.setVal(r.getValAt(wPos, h - 1));
+              above.setVal(cost.getValAt(wPos, h - 1));
             }
-            if (h < r.getHeight()) {
-              below.setVal(r.getValAt(wPos, h + 1));
+            if (h < cost.getHeight()) {
+              below.setVal(cost.getValAt(wPos, h + 1));
             }
 
             T minVal = std::min({above, center, below}, [] (auto a, auto b) {
@@ -173,11 +173,11 @@ template <typename T>
             });
 
             if (minVal == above) {
-              nextIndexs.insert(h + 1);
+              nextIndexes.insert(h + 1);
             } else if (minVal == curVal) {
-              nextIndexs.insert(h);
+              nextIndexes.insert(h);
             } else {
-              nextIndexs.insert(h - 1);
+              nextIndexes.insert(h - 1);
             }
           }
           ++offset;
@@ -189,8 +189,8 @@ template <typename T>
           cost.setValAt(w - offset, h, cost.getValAt(w, h));
         }
       }
-      indexes = nextIndexs;
-      nextIndexs.clear();
+      indexes = nextIndexes;
+      nextIndexes.clear();
     }
     grid.setHeight(grid.getHeight() - amt);
     cost.setHeight(cost.getHeight() - amt);
@@ -200,41 +200,41 @@ template <typename T>
 template <typename T>
   FlexGrid<T> traceBackRemV(FlexGrid<T> grid, FlexGrid<T>& cost, const unsigned int& amt) {
     // Finding starting points
-    std::map<T, unsigned int> startingPoints;
+    std::map<T, unsigned int> startingPts;
     for (unsigned int w = 0; w < cost.getWidth(); ++w) {
-      startingPoints[cost.getValAt(w, r.getHeight() - 1)] = w;
+      startingPts[cost.getValAt(w, cost.getHeight() - 1)] = w;
     }
-    mymap.erase(mymap.begin() + amt, mymap.end());
+    startingPts.erase(startingPts.begin() + amt, startingPts.end());
 
-    std::set<unsigned int> indexs;
-    std::set<unsigned int> nextIndexs;
+    std::set<unsigned int> indexes;
+    std::set<unsigned int> nextIndexes;
 
     // Populate the indexes with the starting points
-    for (auto& entry : startingPoints) {
+    for (auto& entry : startingPts) {
       indexes.insert(entry.second);
     }
 
     // Start removing seams
-    for (unsigned int h = r.getHeight() - 1; h >= 0; --h) {
+    for (unsigned int h = grid.getHeight() - 1; h >= 0; --h) {
       unsigned int offset = 0;
-      for (unsigned int w = 0; w < r.getWidth(); ++w) {
+      for (unsigned int w = 0; w < grid.getWidth(); ++w) {
         if (indexes.find(w) != indexes.end()) {
           if (h > 0) {
             auto hPos = h - 1;
 
             // Constant Params
             T curVal = grid.getValAt(w, h);
-            Optional<T> center(r.getValAt(w, hPos));
+            Optional<T> center(cost.getValAt(w, hPos));
 
             // Optional Params
             Optional<T> left;
             Optional<T> right;
 
             if (w > 0) {
-              left.setVal(r.getValAt(w - 1, hPos));
+              left.setVal(cost.getValAt(w - 1, hPos));
             }
-            if (w < r.getWidth()) {
-              right.setVal(r.getValAt(w + 1, hPos));
+            if (w < cost.getWidth()) {
+              right.setVal(cost.getValAt(w + 1, hPos));
             }
 
             T minVal = std::min({left, center, right}, [] (auto a, auto b) {
@@ -242,11 +242,11 @@ template <typename T>
             });
 
             if (minVal == left) {
-              nextIndexs.insert(w + 1);
+              nextIndexes.insert(w + 1);
             } else if (minVal == curVal) {
-              nextIndexs.insert(w);
+              nextIndexes.insert(w);
             } else {
-              nextIndexs.insert(w - 1);
+              nextIndexes.insert(w - 1);
             }
           }
           ++offset;
@@ -258,8 +258,8 @@ template <typename T>
           cost.setValAt(w, h - offset, cost.getValAt(w, h));
         }
       }
-      indexes = nextIndexs;
-      nextIndexs.clear();
+      indexes = nextIndexes;
+      nextIndexes.clear();
     }
     grid.setWidth(grid.getHeight() - amt);
     cost.setWidth(cost.getHeight() - amt);
