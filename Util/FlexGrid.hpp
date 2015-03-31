@@ -13,32 +13,30 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-#ifndef GRID_HPP
-#define GRID_HPP
+#ifndef FLEXGRID_HPP
+#define FLEXGRID_HPP
 
 #include <vector>
 
 template <typename T>
-class Grid {
-  const unsigned int width;
-  const unsigned int height;
-  std::vector<T> grid;
+class FlexGrid {
+  unsigned int width;
+  unsigned int height;
+  std::vector<std::vector<T>> grid;
 public:
-  Grid(unsigned int, unsigned int);
-
-  unsigned int calcIndex(unsigned int, unsigned int) const;
+  FlexGrid(unsigned int, unsigned int);
 
   T getValAt(unsigned int, unsigned int) const;
-  void setValAt(const unsigned int&, const T&);
   void setValAt(const unsigned int&, const unsigned int&, const T&);
 
-  T operator [] (const unsigned int&) const;
+  void setWidth(const unsigned int&);
+  void setHeight(const unsigned int&);
 
   unsigned int len() const;
   unsigned int getWidth() const;
   unsigned int getHeight() const;
 };
 
-#include "Grid.ipp"
+#include "FlexGrid.ipp"
 
 #endif

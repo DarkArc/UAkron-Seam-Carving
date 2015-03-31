@@ -15,7 +15,7 @@
 
 #include <stdexcept>
 
-/** Construct a new Grid object.
+/** Construct a new FlexGrid object.
 
     @param width
     The width of the grid
@@ -24,23 +24,12 @@
     The height of the grid
  */
 template <typename T>
-  Grid<T>::Grid(unsigned int width, unsigned int height) :
-    width(width), height(height),
-    grid(std::vector<T>(width * height)) { }
-
-/** Calculates the 1D index given 2D quards.
-
-    @param x
-    The x quardinate.
-
-    @param y
-    The y quardinate.
-
-    @return the grid 1D index.
- */
-template <typename T>
-  unsigned int Grid<T>::calcIndex(unsigned int x, unsigned int y) const {
-    return y * width + x;
+  FlexGrid<T>::FlexGrid(unsigned int width, unsigned int height) :
+    width(width), height(height) {
+    grid.resize(width);
+    for (auto& entry : grid) {
+      entry.resize(height);
+    }
   }
 
 /** Retrieves the value at the given 2D quards.
@@ -58,7 +47,7 @@ template <typename T>
     calulated 1D index.
  */
 template <typename T>
-  T Grid<T>::getValAt(unsigned int x, unsigned int y) const {
+  T FlexGrid<T>::getValAt(unsigned int x, unsigned int y) const {
     if (x >= width || x < 0) {
       throw std::runtime_error("Given x is not within bounds!");
     }
@@ -66,27 +55,7 @@ template <typename T>
       throw std::runtime_error("Given y is not within bounds!");
     }
 
-    return grid[calcIndex(x, y)];
-  }
-
-/** Sets the vaue at the given index.
-
-    Sets the value at the provided index to be equal to the
-    provided new value.
-
-    @param index
-    The 1D index where the new value is to be placed.
-
-    @param val
-    The new value to be set at the specified index.
- */
-template <typename T>
-  void Grid<T>::setValAt(const unsigned int& index, const T& val) {
-    if (index < 0 || index >= len()) {
-      throw std::runtime_error("Given index is not within bounds!");
-    }
-
-    grid[index] = val;
+    return grid[x][y];
   }
 
 /** Sets the value at the given 2D quards.
@@ -105,7 +74,7 @@ template <typename T>
     The new value to be set at the specified index.
  */
 template <typename T>
-  void Grid<T>::setValAt(const unsigned int& x, const unsigned int& y, const T& val) {
+  void FlexGrid<T>::setValAt(const unsigned int& x, const unsigned int& y, const T& val) {
     if (x >= width || x < 0) {
       throw std::runtime_error("Given x is not within bounds!");
     }
@@ -113,25 +82,21 @@ template <typename T>
       throw std::runtime_error("Given y is not within bounds!");
     }
 
-    grid[calcIndex(x, y)] = val;
+    grid[x][y] = val;
   }
 
-/** Retrieves the value at the given index.
-
-    Retrieves the value held at the given index.
-
-    @param index
-    The 1D index where the new value is to be placed.
-
-    @returns the given value held by the grid at the
-    given index.
- */
 template <typename T>
-  T Grid<T>::operator [] (const unsigned int& index) const {
-    if (index < 0 || index >= len()) {
-      throw std::runtime_error("Given index is not within bounds!");
+  void FlexGrid<T>::setWidth(const unsigned int& width) {
+    this->width = width;
+    grid.resize(width);
+  }
+
+template <typename T>
+  void FlexGrid<T>::setHeight(const unsigned int& height) {
+    this->height = height;
+    for (auto& entry : grid) {
+      entry.resize(height);
     }
-    return grid[index];
   }
 
 /** Gets the length of the grid.
@@ -142,8 +107,8 @@ template <typename T>
     @returns the length of the 1D representation.
  */
 template <typename T>
-  unsigned int Grid<T>::len() const {
-    return grid.size();
+  unsigned int FlexGrid<T>::len() const {
+    return width * height;
   }
 
 /** Gets the width of the grids rows.
@@ -154,7 +119,7 @@ template <typename T>
     @returns the width of grid.
  */
 template <typename T>
-  unsigned int Grid<T>::getWidth() const {
+  unsigned int FlexGrid<T>::getWidth() const {
     return width;
   }
 
@@ -166,6 +131,6 @@ template <typename T>
     @returns the length of grid.
  */
 template <typename T>
-  unsigned int Grid<T>::getHeight() const {
+  unsigned int FlexGrid<T>::getHeight() const {
     return height;
   }

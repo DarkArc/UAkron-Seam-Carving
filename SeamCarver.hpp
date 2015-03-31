@@ -1,7 +1,7 @@
 #ifndef SEAMCARVER_HPP
 #define SEAMCARVER_HPP
 
-#include "Util/Grid.hpp"
+#include "Util/FlexGrid.hpp"
 
 enum class CarvingMode {
   HORIZONTAL,
@@ -9,16 +9,16 @@ enum class CarvingMode {
 };
 
 template <typename T>
-  Grid<T> seamCarve(const Grid<T>&, const int&, const int&);
+  FlexGrid<T> seamCarve(const FlexGrid<T>&, const unsigned int&, const unsigned int&);
 
 template <typename T>
-  Grid<T> calcEnergy(const Grid<T>&);
+  FlexGrid<T> calcEnergy(const FlexGrid<T>&);
 
 template <typename T>
-  Grid<T> calcCost(const Grid<T>&, const CarvingMode&);
+  FlexGrid<T> calcCost(const FlexGrid<T>&, const CarvingMode&);
 
 template <typename T>
-  Grid<T> traceBackRem(const Grid<T>&, const CarvingMode&);
+  FlexGrid<T> traceBackRem(FlexGrid<T>, FlexGrid<T>&, const CarvingMode&, const unsigned int&);
 
 
 #include "SeamCarver.ipp"
