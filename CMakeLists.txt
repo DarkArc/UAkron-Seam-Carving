@@ -8,4 +8,4 @@ add_executable(SeamCarving
   main.cpp
 )
 
-set(CMAKE_CXX_FLAGS "-Wall -std=c++11")
+set(CMAKE_CXX_FLAGS "-Wall -std=c++1y")
