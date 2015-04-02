@@ -9,4 +9,4 @@ add_executable(SeamCarving
   ImageLoader.cpp
 )
 
-set(CMAKE_CXX_FLAGS "-Wall -std=c++11")
+set(CMAKE_CXX_FLAGS "-Wall -O2 -std=c++11")

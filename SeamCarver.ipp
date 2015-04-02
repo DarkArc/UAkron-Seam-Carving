@@ -152,7 +152,7 @@ template <typename T>
     // Start removing seams
     for (unsigned int w = grid.getWidth() - 1; w + 1 > 0; --w) {
 
-      unsigned int newNext;
+      unsigned int newNext = 0;
 
       if (w > 0) {
         auto wPos = w - 1;
@@ -203,7 +203,7 @@ template <typename T>
     // Start removing seams
     for (unsigned int h = grid.getHeight() - 1; h + 1 > 0; --h) {
 
-      unsigned int newNext;
+      unsigned int newNext = 0;
 
       if (h > 0) {
         auto hPos = h - 1;
