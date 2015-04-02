@@ -12,5 +12,6 @@ int main(int argc, char* argv[]) {
   FlexGrid<int> f = seamCarve(p, CarvingMode::HORIZONTAL, 50);
   loader.setGrid(f);
   loader.exportFile("test-res.pgm");
+  std::cout << "exited" << std::endl;
   return 0;
 }

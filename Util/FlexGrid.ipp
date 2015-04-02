@@ -15,6 +15,9 @@
 
 #include <stdexcept>
 
+// TODO Remove
+#include <iostream>
+
 /** Construct a new FlexGrid object.
 
     @param width
@@ -87,6 +90,7 @@ template <typename T>
 
 template <typename T>
   void FlexGrid<T>::setWidth(const unsigned int& width) {
+    std::cout << "Width: " << width << std::endl;
     this->width = width;
     grid.resize(width);
   }
