@@ -130,13 +130,12 @@ template <typename T>
   void traceBackRemH(FlexGrid<T>& grid, const FlexGrid<T>& cost) {
     // Finding starting points
     unsigned int next = 0;
-    Optional<T> curVal;
 
     for (unsigned int h = 0; h < cost.getHeight(); ++h) {
       auto val = cost.getValAt(cost.getWidth() - 1, h);
+      auto curVal = cost.getValAt(cost.getWidth() - 1, next);
 
-      if (!curVal.hasVal() || val < curVal.getVal()) {
-        curVal.setVal(cost.getValAt(cost.getWidth() - 1, next));
+      if (val < curVal) {
         next = h;
       }
     }
@@ -186,13 +185,12 @@ template <typename T>
   void traceBackRemV(FlexGrid<T>& grid, const FlexGrid<T>& cost) {
     // Finding starting points
     unsigned int next = 0;
-    Optional<T> curVal;
 
     for (unsigned int w = 0; w < cost.getWidth(); ++w) {
       auto val = cost.getValAt(w, cost.getHeight() - 1);
+      auto curVal = cost.getValAt(next, cost.getHeight() - 1);
 
-      if (!curVal.hasVal() || val < curVal.getVal()) {
-        curVal.setVal(cost.getValAt(next, cost.getHeight() - 1));
+      if (val < curVal) {
         next = w;
       }
     }
