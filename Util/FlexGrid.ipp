@@ -87,12 +87,18 @@ template <typename T>
 
 template <typename T>
   void FlexGrid<T>::setWidth(const unsigned int& width) {
+    if (width < 0) {
+      throw std::runtime_error("A grid cannot be smaller than 0 columns wide!");
+    }
     this->width = width;
     grid.resize(width);
   }
 
 template <typename T>
   void FlexGrid<T>::setHeight(const unsigned int& height) {
+    if (height < 0) {
+      throw std::runtime_error("A grid cannot be smaller than 0 rows tall!");
+    }
     this->height = height;
     for (auto& entry : grid) {
       entry.resize(height);
