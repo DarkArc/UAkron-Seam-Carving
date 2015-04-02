@@ -3,10 +3,15 @@
 
 #include "Util/FlexGrid.hpp"
 #include "SeamCarver.hpp"
+#include "ImageLoader.hpp"
 
 int main(int argc, char* argv[]) {
-  FlexGrid<int> k(10, 10);
-  FlexGrid<int> p = seamCarve(k, CarvingMode::VERTICAL, 4);
-  // FlexGrid<int> f = seamCarve(p, CarvingMode::VERTICAL, 4);
+  ImageLoader loader;
+  loader.loadFile("test.pgm");
+  FlexGrid<int> p = seamCarve(loader.getGrid(), CarvingMode::VERTICAL, 50);
+  FlexGrid<int> f = seamCarve(p, CarvingMode::HORIZONTAL, 50);
+  loader.setGrid(f);
+  loader.exportFile("test-res.pgm");
+  std::cout << "exited" << std::endl;
   return 0;
 }

@@ -18,7 +18,7 @@ template <typename T>
   FlexGrid<T> calcCost(const FlexGrid<T>&, const CarvingMode&);
 
 template <typename T>
-  FlexGrid<T> traceBackRem(FlexGrid<T>, FlexGrid<T>&, const CarvingMode&, const unsigned int&);
+  void traceBackRem(FlexGrid<T>&, const FlexGrid<T>&, const CarvingMode&);
 
 
 #include "SeamCarver.ipp"

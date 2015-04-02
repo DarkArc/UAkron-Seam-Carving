@@ -6,6 +6,7 @@ project(SeamCarving CXX)
 # Source Declaration
 add_executable(SeamCarving
   main.cpp
+  ImageLoader.cpp
 )
 
 set(CMAKE_CXX_FLAGS "-Wall -std=c++11")
