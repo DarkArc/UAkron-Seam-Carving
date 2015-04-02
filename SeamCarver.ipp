@@ -1,8 +1,5 @@
 #include "SeamCarver.hpp"
 
-// TODO Remove
-#include <iostream>
-
 #include <algorithm>
 #include <stdexcept>
 #include <set>
@@ -11,28 +8,12 @@
 #include "Util/Optional.hpp"
 
 template <typename T>
-  void printBoard(FlexGrid<T> grid) {
-    for (unsigned int h = 0; h < grid.getHeight(); ++h) {
-      for (unsigned int w = 0; w < grid.getWidth(); ++w) {
-        std::cout << grid.getValAt(w, h) << " ";
-      }
-      std::cout << std::endl;
-    }
-  }
-
-template <typename T>
   FlexGrid<T> seamCarve(const FlexGrid<T>& grid, const CarvingMode& mode, const unsigned int& amt) {
     FlexGrid<T> newGrid = grid;
     for (unsigned int i = 0; i < amt; ++i) {
       FlexGrid<T> energyGrid = calcEnergy(newGrid);
-      std::cout << "Energy" << " - " << i << std::endl;
-      printBoard(energyGrid);
       FlexGrid<T> costGrid = calcCost(energyGrid, mode);
-      std::cout << "Cost" << " - " << i << std::endl;
-      printBoard(costGrid);
       traceBackRem(newGrid, costGrid, mode);
-      std::cout << "Final" << " - " << i << std::endl;
-      printBoard(newGrid);
     }
     return newGrid;
   }
@@ -155,9 +136,6 @@ template <typename T>
     } else if (dist < 1) {
       std::runtime_error("Ran out of columns to remove!");
     }
-
-    std::cout << "Limited scope" << std::endl;
-
     return map.begin()->second;
   }
 
