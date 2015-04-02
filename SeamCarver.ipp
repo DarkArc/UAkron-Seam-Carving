@@ -2,8 +2,6 @@
 
 #include <algorithm>
 #include <stdexcept>
-#include <set>
-#include <map>
 
 #include "Util/Optional.hpp"
 
@@ -129,25 +127,18 @@ template <typename T>
   }
 
 template <typename T>
-  unsigned int findStartingPos(std::multimap<T, unsigned int>& map) {
-    unsigned int dist = std::distance(map.begin(), map.end());
-    if (dist > 1) {
-      map.erase(std::next(map.begin(), 1), map.end());
-    } else if (dist < 1) {
-      std::runtime_error("Ran out of columns to remove!");
-    }
-    return map.begin()->second;
-  }
-
-template <typename T>
   void traceBackRemH(FlexGrid<T>& grid, const FlexGrid<T>& cost) {
     // Finding starting points
-    std::multimap<T, unsigned int> startingPts;
-    for (unsigned int h = 0; h < cost.getHeight(); ++h) {
-      startingPts.insert(std::pair<T, unsigned int>(cost.getValAt(cost.getWidth() - 1, h), h));
-    }
+    unsigned int next = 0;
 
-    unsigned int next = findStartingPos(startingPts);
+    for (unsigned int h = 0; h < cost.getHeight(); ++h) {
+      auto val = cost.getValAt(cost.getWidth() - 1, h);
+      auto curVal = cost.getValAt(cost.getWidth() - 1, next);
+
+      if (val < curVal) {
+        next = h;
+      }
+    }
 
     // Start removing seams
     for (unsigned int w = grid.getWidth() - 1; w + 1 > 0; --w) {
@@ -193,12 +184,16 @@ template <typename T>
 template <typename T>
   void traceBackRemV(FlexGrid<T>& grid, const FlexGrid<T>& cost) {
     // Finding starting points
-    std::multimap<T, unsigned int> startingPts;
-    for (unsigned int w = 0; w < cost.getWidth(); ++w) {
-      startingPts.insert(std::pair<T, unsigned int>(cost.getValAt(w, cost.getHeight() - 1), w));
-    }
+    unsigned int next = 0;
 
-    unsigned int next = findStartingPos(startingPts);
+    for (unsigned int w = 0; w < cost.getWidth(); ++w) {
+      auto val = cost.getValAt(w, cost.getHeight() - 1);
+      auto curVal = cost.getValAt(next, cost.getHeight() - 1);
+
+      if (val < curVal) {
+        next = w;
+      }
+    }
 
     // Start removing seams
     for (unsigned int h = grid.getHeight() - 1; h + 1 > 0; --h) {
