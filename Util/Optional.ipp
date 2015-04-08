@@ -83,6 +83,12 @@ template <typename T>
 
     Checks to see if both Optionals contain the same value.
 
+    @param a
+    The first Optional to compare.
+
+    @param b
+    The second Optional to compare.
+
     @return true if both Optionals contain the same value,
     false otherwise.
  */
@@ -95,6 +101,12 @@ template <typename K>
 
     Checks to see if both Optionals contain the same value.
 
+    @param a
+    The first Optional to compare.
+
+    @param b
+    The second Optional to compare.
+
     @return false if both Optionals contain the same value,
     true otherwise.
  */
@@ -103,6 +115,25 @@ template <typename K>
     return !(a == b);
   }
 
+/** Checks the value relationship between two Optional objects.
+
+    Checks to see if the value in first Optional is less than
+    the value in the second Optional. An Optional is conisidered
+    to be less than another Optional under two conditions:
+    - The Optional it is being compared with does not have a
+      value.
+    - The value in the first Optional is defined, and less
+      than the value in the second Optional.
+
+    @param a
+    The first Optional to compare.
+
+    @param b
+    The second Optional to compare.
+
+    @return true if Optional a is less than Optional b, as
+    peviously definied, false otherwise.
+ */
 template <typename K>
   bool operator < (const Optional<K>& a, const Optional<K>& b) {
     return !b.hasVal() || (a.hasVal() && a.getVal() < b.getVal());
