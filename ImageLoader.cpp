@@ -25,14 +25,11 @@ bool ImageLoader::loadFile(const std::string& fileName) {
 }
 
 bool ImageLoader::isComment(const std::string& str) {
-  const std::regex e("(#)(.*)");
-
-  return std::regex_match(str, e);
+  return std::regex_match(str, std::regex("(#)(.*)"));
 }
 
 bool ImageLoader::parseHeader(std::ifstream& ifs) {
   // Regex constants
-  const std::regex pattern("[0-9]+");
   const std::regex_token_iterator<std::string::iterator> rend;
 
   // Get PGM Header
@@ -48,7 +45,7 @@ bool ImageLoader::parseHeader(std::ifstream& ifs) {
   } while (isComment(temp));
 
   std::regex_token_iterator<std::string::iterator> sizeMatch(
-    temp.begin(), temp.end(), pattern
+    temp.begin(), temp.end(), std::regex("[0-9]+")
   );
 
   if (std::distance(sizeMatch, rend) != 2) {
@@ -64,7 +61,7 @@ bool ImageLoader::parseHeader(std::ifstream& ifs) {
   } while (isComment(temp));
 
   std::regex_token_iterator<std::string::iterator> greyScaleMatch(
-    temp.begin(), temp.end(), pattern
+    temp.begin(), temp.end(), std::regex("[0-9]+")
   );
 
   if (std::distance(greyScaleMatch, rend) != 1) {
@@ -78,7 +75,6 @@ bool ImageLoader::parseHeader(std::ifstream& ifs) {
 
 bool ImageLoader::parseBody(std::ifstream& ifs) {
 
-  const std::regex pattern("[0-9]+");
   const std::regex_token_iterator<std::string::iterator> rend;
 
   iData = FlexGrid<int>(colCount, rowCount);
@@ -92,7 +88,7 @@ bool ImageLoader::parseBody(std::ifstream& ifs) {
     if (isComment(line)) continue;
 
     std::regex_token_iterator<std::string::iterator> match(
-      line.begin(), line.end(), pattern
+      line.begin(), line.end(), std::regex("[0-9]+")
     );
 
     while (match != rend) {
