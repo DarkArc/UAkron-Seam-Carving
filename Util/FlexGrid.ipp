@@ -85,21 +85,39 @@ template <typename T>
     grid[x][y] = val;
   }
 
+/** Sets the grid width.
+
+    Takes a new width value, and adds or removes
+    adequate columns. Deleted columns are not removed
+    from memory, but are instead made inaccessible
+    for performance reasons.
+
+    @param width
+    The width of the grid, or x length.
+ */
 template <typename T>
   void FlexGrid<T>::setWidth(const unsigned int& width) {
-    if (width < 0) {
-      throw std::runtime_error("A grid cannot be smaller than 0 columns wide!");
-    }
     this->width = width;
-    grid.resize(width);
+    // Resize the row/x vector, adding new vectors
+    // with the proper height where necessary
+    grid.resize(width, std::vector<T>(height));
   }
 
+/** Sets the grid height.
+
+    Takes a new height value, and adds or removes
+    adequate rows. Deleted rows are not removed
+    from memory, but are instead made inaccessible
+    for performance reasons.
+
+    @param width
+    The height of the grid, or y length.
+ */
 template <typename T>
   void FlexGrid<T>::setHeight(const unsigned int& height) {
-    if (height < 0) {
-      throw std::runtime_error("A grid cannot be smaller than 0 rows tall!");
-    }
     this->height = height;
+    // Update all column heights to add or remove
+    // rows
     for (auto& entry : grid) {
       entry.resize(height);
     }
