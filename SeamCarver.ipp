@@ -429,10 +429,10 @@ template <typename T>
         // on the discovered path
         if (minVal == left) {
           newNext = next - 1;
-        } else if (minVal == right) {
-          newNext = next + 1;
-        } else {
+        } else if (minVal == center) {
           newNext = next;
+        } else {
+          newNext = next + 1;
         }
       }
 
