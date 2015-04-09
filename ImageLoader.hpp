@@ -19,15 +19,15 @@ public:
     FlexGrid<int> getGrid() const;
     void setGrid(const FlexGrid<int>&);
 
-    bool loadFile(const std::string&);
-    bool exportFile(const std::string&) const;
+    void loadFile(const std::string&);
+    void exportFile(const std::string&) const;
 private:
     bool isComment(const std::string&);
 
-    bool parseHeader(std::ifstream&);
-    bool parseBody(std::ifstream&);
+    void parseHeader(std::ifstream&);
+    void parseBody(std::ifstream&);
 
-    bool exportHeader(std::ofstream&, const std::string&) const;
-    bool exportBody(std::ofstream&) const;
+    void exportHeader(std::ofstream&, const std::string&) const;
+    void exportBody(std::ofstream&) const;
 };
 #endif
