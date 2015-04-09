@@ -3,8 +3,6 @@
 #include <algorithm>
 #include <fstream>
 #include <regex>
-#include <ctime>
-#include <cassert>
 #include <stdexcept>
 
 /** Construct a new ImageLoader object.
