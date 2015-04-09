@@ -379,7 +379,7 @@ template <typename T>
 
     // Finding starting point by locating the smallest
     // cost value in the last row
-    for (unsigned int w = 0; w < cost.getWidth(); ++w) {
+    for (unsigned int w = cost.getWidth() - 1; w + 1 > 0; --w) {
       auto val = cost.getValAt(w, cost.getHeight() - 1);
       auto curVal = cost.getValAt(next, cost.getHeight() - 1);
 
