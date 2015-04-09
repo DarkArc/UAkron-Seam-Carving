@@ -5,6 +5,25 @@
 
 #include "Util/Optional.hpp"
 
+/** Runs the seam carving algorithm.
+
+    Given a grid of pixel values, the carving mode,
+    and the number of seams to remove. This function
+    creates a copy of the grid, and then processes
+    said copy, removing the requested number of seams.
+
+    @param grid
+    The pixel grid to copy and remove seams from.
+
+    @param mode
+    The carving mode to utalize (vertical/horizontal).
+
+    @param amt
+    The amt of seams to remove.
+
+    @returns the altered pixel grid, with all
+    requested seams removed.
+ */
 template <typename T>
   FlexGrid<T> seamCarve(const FlexGrid<T>& grid, const CarvingMode& mode, const unsigned int& amt) {
     // Create a copy of the grid, so that we do not modify the original
@@ -21,6 +40,18 @@ template <typename T>
     return newGrid;
   }
 
+/** Calculates an energy grid.
+
+    Given a grid of pixel values, this function
+    calculates an energy grid of equal deminsions
+    for usage in the seam carving algorithm's
+    calculation of a cost grid.
+
+    @param grid
+    The pixel grid to base calculations off of.
+
+    @returns the calculated energy grid.
+ */
 template <typename T>
   FlexGrid<T> calcEnergy(const FlexGrid<T>& grid) {
     // Create a new grid of equal deminsions to serve as the
@@ -52,6 +83,18 @@ template <typename T>
     return r;
   }
 
+/** Calculates a horizontal cost grid.
+
+    Given an energy grid, this function
+    calculatues a cost grid of equal deminsions
+    for usage by the seam carving algorithm
+    in seam removal.
+
+    @param energy
+    The energy grid to base the cost grid off of.
+
+    @returns the calculated horizontal cost grid.
+ */
 template <typename T>
   FlexGrid<T> calcCostH(const FlexGrid<T>& energy) {
     // Create a new grid of equal deminisions to serve as the
@@ -105,6 +148,18 @@ template <typename T>
     return r;
   }
 
+/** Calculates a vertical cost grid.
+
+    Given an energy grid, this function
+    calculatues a cost grid of equal deminsions
+    for usage by the seam carving algorithm
+    in seam removal.
+
+    @param energy
+    The energy grid to base the cost grid off of.
+
+    @returns the calculated vertical cost grid.
+ */
 template <typename T>
   FlexGrid<T> calcCostV(const FlexGrid<T>& energy) {
     // Create a new grid of equal deminisions to serve as the
@@ -158,6 +213,22 @@ template <typename T>
     return r;
   }
 
+/** Calculates a vertical or horizontal cost grid.
+
+    Given an energy grid, and the carving mode.
+    This function then calculatues a cost grid
+    of equal deminsions based on the respective
+    carving mode for usage by the seam carving
+    algorithm in seam removal.
+
+    @param energy
+    The energy grid to base the cost grid off of.
+
+    @param mode
+    The carving mode to utalize (vertical/horizontal).
+
+    @returns the calculated vertical or horizontal cost grid.
+ */
 template <typename T>
   FlexGrid<T> calcCost(const FlexGrid<T>& grid, const CarvingMode& mode) {
     // Pick the proper cost matrix generation function
@@ -171,6 +242,23 @@ template <typename T>
     throw std::runtime_error("Invalid Carving Mode!");
   }
 
+/** Performs a horizontal seam removal.
+
+    Given a pixel grid, and a cost grid.
+    This function then uses the cost grid
+    to to discover and removal the seam
+    of least significance from the pixel grid.
+
+    The cost grid should be calculated with
+    the horizontal carving mode for
+    proper seam removal.
+
+    @param grid
+    The pixel grid to remove from.
+
+    @param cost
+    The cost grid to use for seam discovery.
+ */
 template <typename T>
   void traceBackRemH(FlexGrid<T>& grid, const FlexGrid<T>& cost) {
     // Create a variable to keep track of the position
@@ -251,6 +339,23 @@ template <typename T>
     grid.setHeight(grid.getHeight() - 1);
   }
 
+/** Performs a vertical seam removal.
+
+    Given a pixel grid, and a cost grid.
+    This function then uses the cost grid
+    to to discover and removal the seam
+    of least significance from the pixel grid.
+
+    The cost grid should be calculated with
+    the vertical carving mode for
+    proper seam removal.
+
+    @param grid
+    The pixel grid to remove from.
+
+    @param cost
+    The cost grid to use for seam discovery.
+ */
 template <typename T>
   void traceBackRemV(FlexGrid<T>& grid, const FlexGrid<T>& cost) {
     // Create a variable to keep track of the position
@@ -331,8 +436,27 @@ template <typename T>
     grid.setWidth(grid.getWidth() - 1);
   }
 
+/** Performs a vertical or horizontal seam removal.
 
+    Given a pixel grid, a cost grid, and the carving mode.
+    This function then uses the cost grid
+    to to discover and removal the seam
+    of least significance from the pixel grid based on
+    the respective carving mode.
 
+    The cost grid should be calculated with the same
+    carving mode supplied to this function for proper
+    seam removal.
+
+    @param grid
+    The pixel grid to remove from.
+
+    @param cost
+    The cost grid to use for seam discovery.
+
+    @param mode
+    The carving mode to utalize (vertical/horizontal).
+ */
 template <typename T>
   void traceBackRem(FlexGrid<T>& grid, const FlexGrid<T>& cost, const CarvingMode& mode) {
     // Pick the proper removal function based on the carving mode
