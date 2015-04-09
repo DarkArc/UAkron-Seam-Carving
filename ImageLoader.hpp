@@ -19,7 +19,6 @@
 #include <string>
 
 #include "Util/FlexGrid.hpp"
-#include "Util/Optional.hpp"
 
 class ImageLoader {
     std::string header;
